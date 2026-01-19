@@ -63,3 +63,4 @@ def run_news_crew():
 # Only run immediately if we are testing locally
 if __name__ == "__main__":
     run_news_crew()
+# Trigger Vercel Build
