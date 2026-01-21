@@ -14,53 +14,25 @@ search_task = Task(
     agent=researcher,
 )
 
-# ... (Agents initialization remains the same) ...
-
-# Task 1: Search (Kept the same)
-search_task = Task(
-    description="""
-    Search for the top 5 latest and most significant news trends regarding: {topic}.
-    Focus on events from the last 7 days. 
-    Identify key companies, new technologies, or major market shifts.
-    """,
-    expected_output="A list of raw news findings with titles, links, and brief details.",
-    agent=researcher,
-)
-
-# Task 2: Summarize & Publish (UPDATED)
 summarize_task = Task(
     description="""
-    You have received a list of news from the Researcher. 
+    1. Summarize the news into a markdown-formatted daily briefing (headline, summary, url).
+    2. **MANDATORY**: Use the 'Send News to Slack' tool to send that summary.
+    3. **MANDATORY**: Iterate through every news item and use the 'Log News to Google Sheets' tool for each one.
     
-    STEP 1: Summarize
-    Create a clean daily briefing with bullet points. Each point must have a Headline, Summary, and Link.
-    
-    STEP 2: Publish to Slack
-    Use the 'Send News to Slack' tool to post the *entire* summary as one message.
-    
-    STEP 3: Archive to Sheets
-    For EACH news item in the list, use the 'Log News to Google Sheets' tool. 
-    You must call this tool multiple times (once for every news item) to log them individually.
+    IMPORTANT: Do NOT return the news summary as your Final Answer. 
+    Your Final Answer should ONLY be the text: "Briefing sent to Slack and logged to Sheets."
     """,
-    expected_output="A confirmation that the news was posted to Slack and logged to Sheets.",
+    expected_output="A simple confirmation message confirming the tools were successfully used.",
     agent=writer,
 )
-
-# ... (Rest of the file remains the same) ...
 
 news_crew = Crew(
     agents=[researcher, writer], tasks=[search_task, summarize_task], verbose=True
 )
 
+topic = "Artificial Intelligence trends 2025"
+print(f"🚀 Starting the News Crew on topic: {topic}...")
 
-def run_news_crew():
-    topic = "Artificial Intelligence trends 2025"
-    print(f"🚀 Starting the News Crew on topic: {topic}...")
-    result = news_crew.kickoff(inputs={"topic": topic})
-    return result
-
-
-# Only run immediately if we are testing locally
-if __name__ == "__main__":
-    run_news_crew()
-# Trigger Vercel Build
+result = news_crew.kickoff(inputs={"topic": topic})
+print(result)

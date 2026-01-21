@@ -27,20 +27,9 @@ class SlackTools:
             response = client.chat_postMessage(
                 channel=channel,
                 text=news_summary,
-                unfurl_links=False,  # Keeps the message clean
+                unfurl_links=False,
             )
             return f"Successfully sent news to channel {channel}"
 
         except SlackApiError as e:
             return f"Error sending to Slack: {e.response['error']}"
-
-
-# --- TEST CODE ---
-if __name__ == "__main__":
-    # Test the tool directly to ensure API keys are correct
-    print("📢 Testing Slack Tool...")
-    test_message = "*Test Message*: Hello from the AI News Bot! 🤖"
-
-    # We access the function directly from the class for testing
-    result = SlackTools.send_news_to_slack.run(news_summary=test_message)
-    print(result)
